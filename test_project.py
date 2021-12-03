@@ -45,34 +45,31 @@ df_new = df_new.dropna()
 df_new.dropna()
 df_new = pd.DataFrame(df_new)
 
-# nyari description yang kecil2 hurufnya
+
 my_list = [y for x in df_new['Description'] for y in x.split() if y.islower()]
 mylist = list(set(my_list))
 print("mylist =========================================")
 print(mylist)
 print("=========================================")
 
-# menghapus data yang tidak sesuai (beli barang tapi nama barangnya gaada)
+##menghapus data yang tidak sesuai (beli barang tapi nama barangnya gaada)
 data_bad = data[data['Description'].isin([ mylist ])]
 
 data = data[~data.apply(tuple,1).isin(data_bad.apply(tuple,1))]
 
-# mengubah data Customer ID null menjadi 99999
+##mengubah data Customer ID null menjadi 99999
 data[['Customer ID']] =data[['Customer ID']].fillna(99999)
 #replace null description values with 'Unknown'
 data[['Description']] =data[['Description']].fillna('Unknown')
 
-# menghapus data dengan pembelian negatif dan ID customer yang tidak sesuai
+##menghapus data dengan pembelian negatif dan ID customer yang tidak sesuai
 # nyisain nilai yang di atas 0 dan customer id yang sesungguhnya
 data = data[data['Quantity'] > 0]
 data = data[data['Customer ID'] != 99999]
-# menghapus data pengembalian / retur barang
+##menghapus data pengembalian barang
 data = data[~data["Invoice"].str.contains("C", na = False)]
 
 data.info()
 
 data = data.drop_duplicates()
 data.shape
-
-print("data head 5 =========================================")
-print(data.head(5))
