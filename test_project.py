@@ -73,3 +73,19 @@ data.info()
 
 data = data.drop_duplicates()
 data.shape
+
+data.info()
+
+#data.sort_values(by=['Quantity'])
+data_uk = data[data.Country == 'United Kingdom']
+data_uk.head(5)
+
+#https://datascience.stackexchange.com/questions/64260/pearson-vs-spearman-vs-kendall/64261
+correlation=data_uk.corr(method='kendall')
+correlation
+
+sns.heatmap(correlation)
+
+sns.boxplot(x='Quantity', data=data_uk)
+
+sns.boxplot(x='Price', data=data_uk)
