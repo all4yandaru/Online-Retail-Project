@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9dc0106a-1f1f-4b90-a767-b6274d3f8886" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/GUI.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/GUI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/figure/heatmap.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/figure/heatmap.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/project.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test_project.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_project.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -46,6 +48,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GUI.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -117,6 +120,7 @@
       <updated>1638514222728</updated>
       <workItem from="1638514224398" duration="14000" />
       <workItem from="1638514294160" duration="4619000" />
+      <workItem from="1639195248062" duration="6717000" />
     </task>
     <servers />
   </component>
@@ -133,5 +137,10 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/GUI_py$test_project.coverage" NAME="test_project Coverage Results" MODIFIED="1639200796296" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/GUI_py$GUI.coverage" NAME="GUI Coverage Results" MODIFIED="1639201418765" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

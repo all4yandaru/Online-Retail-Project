@@ -263,6 +263,7 @@ xpos = np.mod(bic.argmin(), len(n_components_range)) + .65 + \
 plt.text(xpos, bic.min() * 0.97 + .03 * bic.max(), '*', fontsize=14)
 spl.set_xlabel('Number of components')
 spl.legend([b[0] for b in bars], cv_types)
+plt.show()
 
 n_components = np.arange(1, 21)
 models = [GMM(n, covariance_type='full', random_state=0).fit(RFM)

@@ -25,6 +25,7 @@ import kaleido
 
 from project import Project
 
+
 class Machinelearning:
     def __init__(self):
         self.window = tk.Tk()
@@ -39,6 +40,10 @@ class Machinelearning:
         self.frame_botright = ''
         self.panel_botright = ''
         self.tv = ''
+
+        self.initial = 1
+
+        self.process()
 
         self.main_frame()
         self.window.mainloop()
@@ -58,22 +63,19 @@ class Machinelearning:
         # self.b_dataclean = tk.Button(top_left, text="Data Clean", width=15, command=self.table_clean)
         # self.b_dataclean.grid(row=1, column=0, padx=10, pady=10)
 
-        self.b_RFM = tk.Button(top_left, text="RFM", width=15, command=self.frame_RFM)
+        self.b_RFM = tk.Button(top_left, text="Graphics", width=15, command=self.frame_RFM)
         self.b_RFM.grid(row=2, column=0, padx=10, pady=10)
 
-        self.b_BIC = tk.Button(top_left, text="BIC Score", width=15)
-        self.b_BIC.grid(row=3, column=0, padx=10, pady=10)
-
         self.b_GMM = tk.Button(top_left, text="Analyze", width=15)
-        self.b_GMM.grid(row=4, column=0, padx=10, pady=10)
+        self.b_GMM.grid(row=3, column=0, padx=10, pady=10)
 
         self.bot_left = tk.LabelFrame(master=frame_left, width=250, height=500,
-                                 text='Info')
+                                      text='Info')
         self.bot_left.pack(fill=tk.BOTH, side=tk.TOP)
 
         # Frame Kanan
         self.frame_right = tk.LabelFrame(master=self.window, width=900, height=720,
-                                  text='Figure')
+                                         text='Figure')
         self.frame_right.pack(fill=tk.BOTH, side=tk.LEFT, expand=True, padx=5, pady=5)
 
         # frame kanan atas
@@ -81,8 +83,15 @@ class Machinelearning:
         self.frame_topright.pack(fill=tk.BOTH, side=tk.TOP, padx=5, pady=5)
         # self.frame_topright.grid(row=0, column=0, padx=5, pady=0)
 
-
         # self.frame_botright.grid(row=1, column=0, padx=5, pady=0)
+
+    def refresh(self):
+        self.frame_right.destroy()
+        self.frame_topright.destroy()
+        self.frame_right = tk.LabelFrame(master=self.window, width=900, height=720, text='Figure')
+        self.frame_right.pack(fill=tk.BOTH, side=tk.LEFT, expand=True, padx=5, pady=5)
+        self.frame_topright = tk.Frame(master=self.frame_right, width=900, height=150)
+        self.frame_topright.pack(fill=tk.BOTH, side=tk.TOP, padx=5, pady=5)
 
     def plot(self):
         # the figure that will contain the plot
@@ -156,6 +165,7 @@ class Machinelearning:
         labelData2.grid(row=0, column=1)
 
     def table(self):
+        self.refresh()
         if self.panel_botright == True:
             self.panel_botright.destroy()
 
@@ -168,7 +178,7 @@ class Machinelearning:
         tvscrolly = tk.Scrollbar(master=self.frame_botright, orient="vertical", command=self.tv.yview)
         tvscrollx = tk.Scrollbar(master=self.frame_botright, orient="horizontal", command=self.tv.xview)
 
-        self.tv .configure(xscrollcommand=tvscrollx.set, yscrollcommand=tvscrolly.set)
+        self.tv.configure(xscrollcommand=tvscrollx.set, yscrollcommand=tvscrolly.set)
         tvscrollx.pack(side="bottom", fill="x")
         tvscrolly.pack(side="right", fill="y")
 
@@ -201,13 +211,32 @@ class Machinelearning:
             self.tv.insert("", "end", values=row)
         return None
 
-    def heatmap(self):
+    def process(self):
+        # heatmap
         correlation = self.data_uk.corr(method="kendall")
-        heatmap = sns.heatmap(correlation, vmin=-1, vmax=1, annot=True)
+        sns.heatmap(correlation, vmin=-1, vmax=1, annot=True)
         # heatmap = py.heat_2d(correlation, master=self.frame_botright)
         plt.savefig('figure/heatmap.jpg')
 
-        matrix_img_hist = cv2.imread('figure/heatmap.jpg')
+        # monetary recency frekuenci
+        data_mo = self.pr.monetary()
+        data_fr = self.pr.frequency()
+        data_re = self.pr.recency()
+        self.RFM = self.pr.rfm(data_re, data_fr, data_mo)
+
+        self.box_rfm("Recency")
+        self.box_rfm("Frequency")
+        self.box_rfm("Amount")
+
+        #BIC
+        self.pr.bic_score(self.RFM)
+
+        #AIC
+        self.pr.bic_aic(self.RFM)
+
+
+    def load_image(self, filename):
+        matrix_img_hist = cv2.imread(filename)
         matrix_img_hist = cv2.resize(matrix_img_hist, dsize=(850, 450), interpolation=cv2.INTER_CUBIC)
         matrix_img_hist = cv2.cvtColor(matrix_img_hist, cv2.COLOR_BGR2RGB)
         img = ImageTk.PhotoImage(image=Image.fromarray(matrix_img_hist))
@@ -244,78 +273,53 @@ class Machinelearning:
         # plt.savefig(save_fig, fig)
         # cv2.imwrite(save_fig, fig)
 
-        matrix_img_hist = cv2.imread(file)
-        matrix_img_hist = cv2.resize(matrix_img_hist, dsize=(850, 450), interpolation=cv2.INTER_CUBIC)
-        matrix_img_hist = cv2.cvtColor(matrix_img_hist, cv2.COLOR_BGR2RGB)
-        img = ImageTk.PhotoImage(image=Image.fromarray(matrix_img_hist))
-
-        self.panel_botright.configure(image=img)
-        self.panel_botright.image = img
-
-    def heatmap(self):
-        correlation = self.data_uk.corr(method="kendall")
-        heatmap = sns.heatmap(correlation, vmin=-1, vmax=1, annot=True)
-        # heatmap = py.heat_2d(correlation, master=self.frame_botright)
-        plt.savefig('figure/heatmap.jpg')
-
-        matrix_img_hist = cv2.imread('figure/heatmap.jpg')
-        matrix_img_hist = cv2.resize(matrix_img_hist, dsize=(850, 450), interpolation=cv2.INTER_CUBIC)
-        matrix_img_hist = cv2.cvtColor(matrix_img_hist, cv2.COLOR_BGR2RGB)
-        img = ImageTk.PhotoImage(image=Image.fromarray(matrix_img_hist))
-
-        self.panel_botright.configure(image=img)
-        self.panel_botright.image = img
-
-    def heatmap(self):
-        correlation = self.data_uk.corr(method="kendall")
-        heatmap = sns.heatmap(correlation, vmin=-1, vmax=1, annot=True)
-        # heatmap = py.heat_2d(correlation, master=self.frame_botright)
-        plt.savefig('figure/heatmap.jpg')
-
-        matrix_img_hist = cv2.imread('figure/heatmap.jpg')
-        matrix_img_hist = cv2.resize(matrix_img_hist, dsize=(850, 450), interpolation=cv2.INTER_CUBIC)
-        matrix_img_hist = cv2.cvtColor(matrix_img_hist, cv2.COLOR_BGR2RGB)
-        img = ImageTk.PhotoImage(image=Image.fromarray(matrix_img_hist))
-
-        self.panel_botright.configure(image=img)
-        self.panel_botright.image = img
 
     def frame_RFM(self):
+        self.refresh()
         if self.tv == True:
             self.tv.destroy()
-
-        data_mo = self.pr.monetary()
-        data_fr = self.pr.frequency()
-        data_re = self.pr.recency()
-        self.RFM = self.pr.rfm(data_re, data_fr, data_mo)
 
         if self.frame_botright == True:
             self.frame_botright.destroy()
 
         def button_re():
-            self.box_rfm("Recency")
+            self.load_image("figure/Recency.png")
 
         def button_fr():
-            self.box_rfm("Frequency")
+            self.load_image("figure/Frequency.png")
 
         def button_mo():
-            self.box_rfm("Amount")
+            self.load_image("figure/Monetary.png")
+
+        def button_ht():
+            self.load_image("figure/heatmap.jpg")
+
+        def button_bic():
+            self.load_image("figure/bic_score.png")
+
+        def button_aic():
+            self.load_image("figure/aic_score.png")
 
         self.panel_botright = tk.Label(master=self.frame_right, width=900, height=500)
         self.panel_botright.pack()
 
-        b_heatmap = tk.Button(self.frame_topright, text="Heatmap", width=15, command=self.heatmap)
+        b_heatmap = tk.Button(self.frame_topright, text="Heatmap", width=15, command=button_ht)
         b_heatmap.grid(row=0, column=0, padx=10, pady=5)
 
-        b_recency = tk.Button(self.frame_topright, text="Graphic Recency", width=15, command=button_re)
+        b_recency = tk.Button(self.frame_topright, text="Recency", width=15, command=button_re)
         b_recency.grid(row=0, column=1, padx=10, pady=5)
 
-        b_frequency = tk.Button(self.frame_topright, text="Graphic Frequency", width=15, command=button_fr)
+        b_frequency = tk.Button(self.frame_topright, text="Frequency", width=15, command=button_fr)
         b_frequency.grid(row=0, column=2, padx=10, pady=5)
 
-        b_monetary = tk.Button(self.frame_topright, text="Graphic Monetary", width=15, command=button_mo)
+        b_monetary = tk.Button(self.frame_topright, text="Monetary", width=15, command=button_mo)
         b_monetary.grid(row=0, column=3, padx=10, pady=5)
 
+        b_bic = tk.Button(self.frame_topright, text="BIC Score", width=15, command=button_bic)
+        b_bic.grid(row=0, column=4, padx=10, pady=5)
+
+        b_aic = tk.Button(self.frame_topright, text="AIC Score", width=15, command=button_aic)
+        b_aic.grid(row=0, column=5, padx=10, pady=5)
 
 
 Machinelearning()

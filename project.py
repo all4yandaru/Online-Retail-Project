@@ -86,6 +86,7 @@ class Project:
 
     def recency(self):
         date = self.data_uk["InvoiceDate"].max()  # Last invoice date
+        print(type(date))
         # type(date)
         date_split = date.split(' ')  # DATENYA TYPE STRING
         date_split = date_split[0].split('-')
@@ -182,16 +183,18 @@ class Project:
         plt.text(xpos, bic.min() * 0.97 + .03 * bic.max(), '*', fontsize=14)
         spl.set_xlabel('Number of components')
         spl.legend([b[0] for b in bars], cv_types)
+        plt.savefig('figure/bic_score.png')
 
     def bic_aic(self, RFM):
         n_components = np.arange(1, 21)
         models = [GMM(n, covariance_type='full', random_state=0).fit(RFM)
                   for n in n_components]
-
+        plt.clf()
         plt.plot(n_components, [m.bic(RFM) for m in models], label='BIC')
         plt.plot(n_components, [m.aic(RFM) for m in models], label='AIC')
         plt.legend(loc='best')
         plt.xlabel('n_components')
+        plt.savefig('figure/aic_score.png')
 
     def rfm_3d(self, RFM):
         RFM_gmm = RFM.copy()
